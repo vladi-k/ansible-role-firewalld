@@ -1,0 +1,56 @@
+---
+- name: Install firewalld packages
+  ansible.builtin.package:
+    name: "{{ firewalld_packages }}"
+
+- name: Enable and start firewalld
+  ansible.builtin.service:
+    name: firewalld
+    state: started
+    enabled: true
+
+- name: Get default zone
+  ansible.builtin.command: firewall-cmd --get-default-zone
+  check_mode: false
+  changed_when: false
+  register: __default_zone
+
+- name: Set default zone
+  ansible.builtin.command: firewall-cmd --set-default-zone="{{ firewalld_default_zone }}"
+  when: __default_zone.stdout != firewalld_default_zone
+
+- name: Add services
+  ansible.posix.firewalld:
+    service: "{{ item.service }}"
+    state: enabled
+    immediate: true
+    permanent: true
+    zone: "{{ item.zone | default(omit) }}"
+  loop: "{{ firewalld_add_services }}"
+
+- name: Add ports
+  ansible.posix.firewalld:
+    port: "{{ item.port }}/{{ item.protocol }}"
+    state: enabled
+    immediate: true
+    permanent: true
+    zone: "{{ item.zone | default(omit) }}"
+  loop: "{{ firewalld_add_ports }}"
+
+- name: Set masquerades
+  ansible.posix.firewalld:
+    masquerade: 'true'
+    state: enabled
+    immediate: true
+    permanent: true
+    zone: "{{ item }}"
+  loop: "{{ firewalld_add_masquerades }}"
+
+- name: Add rich rules
+  ansible.posix.firewalld:
+    rich_rule: "{{ item.rule }}"
+    state: enabled
+    immediate: true
+    permanent: true
+    zone: "{{ item.zone | default(omit) }}"
+  loop: "{{ firewalld_add_rich_rules }}"

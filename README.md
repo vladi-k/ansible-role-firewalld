@@ -1,7 +1,7 @@
 ansible-role-firewalld
 ====
 
-Install and configure firewalld.
+Install and configure firewalld. By default this role will open immediately and permanently the rules from the variables below.
 
 Requirements
 ------------
@@ -13,18 +13,21 @@ Role Variables
 
 * `firewalld_packages` - list of nfs packages to install.
 * `firewalld_default_zone` - default zone.
-* `firewalld_add_services` - list of services to add, example:
+* `firewalld_services` - list of services to manage, example:
 
 ```yaml
-firewalld_add_services:
+firewalld_services:
   - service: https
     zone: public # optional
+  - service: ssh
+    zone: public
+    state: disabled
 ```
 
-* `firewalld_add_ports` - list of ports to add, example:
+* `firewalld_ports` - list of ports to manage, example:
 
 ```yaml
-firewalld_add_ports:
+firewalld_ports:
   - port: 8080
     protocol: tcp
     zone: public # optional
@@ -37,10 +40,10 @@ firewalld_add_masquerades:
   - trusted
 ```
 
-* `firewalld_add_rich_rules` - list of rich rules to add, example:
+* `firewalld_rich_rules` - list of rich rules to manage, example:
 
 ```yaml
-firewalld_add_rich_rules:
+firewalld_rich_rules:
   - rule: rule family="ipv4" source address="192.168.1.2" service name=mountd accept
   - rule: rule family="ipv4" source address="192.168.1.2" service name=rpc-bind accept
   - rule: rule family="ipv4" source address="192.168.1.2" service name=nfs accept

@@ -19,23 +19,23 @@
   ansible.builtin.command: firewall-cmd --set-default-zone="{{ firewalld_default_zone }}"
   when: __default_zone.stdout != firewalld_default_zone
 
-- name: Add services
+- name: Manage services
   ansible.posix.firewalld:
     service: "{{ item.service }}"
-    state: enabled
-    immediate: true
-    permanent: true
+    state: "{{ item.state | default('enabled') }}"
+    immediate: "{{ item.immediate | default(true) }}"
+    permanent: "{{ item.permanent | default(true) }}"
     zone: "{{ item.zone | default(omit) }}"
-  loop: "{{ firewalld_add_services }}"
+  loop: "{{ firewalld_services }}"
 
-- name: Add ports
+- name: Manage ports
   ansible.posix.firewalld:
     port: "{{ item.port }}/{{ item.protocol }}"
-    state: enabled
-    immediate: true
-    permanent: true
+    state: "{{ item.state | default('enabled') }}"
+    immediate: "{{ item.immediate | default(true) }}"
+    permanent: "{{ item.permanent | default(true) }}"
     zone: "{{ item.zone | default(omit) }}"
-  loop: "{{ firewalld_add_ports }}"
+  loop: "{{ firewalld_ports }}"
 
 - name: Set masquerades
   ansible.posix.firewalld:
@@ -46,11 +46,20 @@
     zone: "{{ item }}"
   loop: "{{ firewalld_add_masquerades }}"
 
-- name: Add rich rules
+- name: Manage rich rules
   ansible.posix.firewalld:
     rich_rule: "{{ item.rule }}"
-    state: enabled
-    immediate: true
-    permanent: true
+    state: "{{ item.state | default('enabled') }}"
+    immediate: "{{ item.immediate | default(true) }}"
+    permanent: "{{ item.permanent | default(true) }}"
     zone: "{{ item.zone | default(omit) }}"
-  loop: "{{ firewalld_add_rich_rules }}"
+  loop: "{{ firewalld_rich_rules }}"
+
+- name: Manage sources
+  ansible.posix.firewalld:
+    source: "{{ item.source }}"
+    state: "{{ item.state | default('enabled') }}"
+    immediate: "{{ item.immediate | default(true) }}"
+    permanent: "{{ item.permanent | default(true) }}"
+    zone: "{{ item.zone | default(omit) }}"
+  loop: "{{ firewalld_sources }}"

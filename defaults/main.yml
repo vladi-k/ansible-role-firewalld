@@ -2,7 +2,7 @@
 firewalld_packages:
   - firewalld
 firewalld_default_zone: public
-firewalld_add_services: []
-firewalld_add_ports: []
+firewalld_services: []
+firewalld_ports: []
 firewalld_add_masquerades: []
-firewalld_add_rich_rules: []
+firewalld_rich_rules: []

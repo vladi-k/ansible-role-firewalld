@@ -49,6 +49,14 @@ firewalld_rich_rules:
   - rule: rule family="ipv4" source address="192.168.1.2" service name=nfs accept
 ```
 
+* `firewalld_sources` - list of sources, example:
+
+```yaml
+firewalld_sources:
+  - source: 192.168.1.2
+    zone: trusted
+```
+
 Dependencies
 ------------
 
@@ -63,7 +71,7 @@ Example Playbook
 ```
 - hosts: my_servers
   vars:
-    firewalld_add_services:
+    firewalld_services:
       - service: https
   roles:
     - ansible-role-firewalld

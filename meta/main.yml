@@ -1,11 +1,13 @@
 ---
 galaxy_info:
+  role_name: shelly
+  namespace: vladi_k
   author: Vladimir Vasilev (@vladi-k)
   description: Install and configure firewalld
   license: GPLv3
-  min_ansible_version: 2.9
+  min_ansible_version: "2.9"
   platforms:
     - name: EL
       versions:
-        - 8
+        - "8"
 dependencies: []

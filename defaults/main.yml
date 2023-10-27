@@ -7,3 +7,5 @@ firewalld_ports: []
 firewalld_add_masquerades: []
 firewalld_rich_rules: []
 firewalld_sources: []
+firewalld_conf_file: /etc/firewalld/firewalld.conf
+firewalld_config: []

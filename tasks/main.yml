@@ -3,6 +3,22 @@
   ansible.builtin.package:
     name: "{{ firewalld_packages }}"
 
+- name: Configure firewalld
+  community.general.ini_file:
+    path: "{{ firewalld_conf_file }}"
+    section: null
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+    no_extra_spaces: true
+    owner: root
+    group: root
+    mode: "0644"
+  loop: "{{ firewalld_config }}"
+  notify:
+    - Restart firewalld
+  tags:
+    - firewalld_config
+
 - name: Enable and start firewalld
   ansible.builtin.service:
     name: firewalld
@@ -27,6 +43,8 @@
     permanent: "{{ item.permanent | default(true) }}"
     zone: "{{ item.zone | default(omit) }}"
   loop: "{{ firewalld_services }}"
+  tags:
+    - firewalld_services
 
 - name: Manage ports
   ansible.posix.firewalld:
@@ -36,6 +54,8 @@
     permanent: "{{ item.permanent | default(true) }}"
     zone: "{{ item.zone | default(omit) }}"
   loop: "{{ firewalld_ports }}"
+  tags:
+    - firewalld_ports
 
 - name: Set masquerades
   ansible.posix.firewalld:
@@ -45,6 +65,8 @@
     permanent: true
     zone: "{{ item }}"
   loop: "{{ firewalld_add_masquerades }}"
+  tags:
+    - firewalld_add_masquerades
 
 - name: Manage rich rules
   ansible.posix.firewalld:
@@ -54,6 +76,8 @@
     permanent: "{{ item.permanent | default(true) }}"
     zone: "{{ item.zone | default(omit) }}"
   loop: "{{ firewalld_rich_rules }}"
+  tags:
+    - firewalld_rich_rules
 
 - name: Manage sources
   ansible.posix.firewalld:
@@ -63,3 +87,5 @@
     permanent: "{{ item.permanent | default(true) }}"
     zone: "{{ item.zone | default(omit) }}"
   loop: "{{ firewalld_sources }}"
+  tags:
+    - firewalld_sources

@@ -56,6 +56,13 @@ firewalld_sources:
   - source: 192.168.1.2
     zone: trusted
 ```
+* `firewalld_conf_file` - path to firewalld.conf file
+* `firewalld_config` - list of firewalld configs to set in firewalld.conf, example:
+```yaml
+firewalld_config:
+  - option: AllowZoneDrifting
+    value: "no"
+```
 
 Dependencies
 ------------

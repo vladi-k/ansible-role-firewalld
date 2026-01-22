@@ -89,3 +89,14 @@
   loop: "{{ firewalld_sources }}"
   tags:
     - firewalld_sources
+
+- name: Manage protocols
+  ansible.posix.firewalld:
+    protocol: "{{ item.protocol }}"
+    state: "{{ item.state | default('enabled') }}"
+    immediate: "{{ item.immediate | default(true) }}"
+    permanent: "{{ item.permanent | default(true) }}"
+    zone: "{{ item.zone | default(omit) }}"
+  loop: "{{ firewalld_protocols }}"
+  tags:
+    - firewalld_protocols

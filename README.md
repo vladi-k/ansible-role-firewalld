@@ -63,6 +63,11 @@ firewalld_config:
   - option: AllowZoneDrifting
     value: "no"
 ```
+* `firewalld_protocols` - list of protocols, example:
+```yaml
+firewalld_protocols:
+  - protocol: igmp
+```
 
 Dependencies
 ------------
